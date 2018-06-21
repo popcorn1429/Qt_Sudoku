@@ -18,12 +18,13 @@ class SudokuData : public QObject
 public:
     explicit SudokuData(QObject *parent = nullptr);
 
-    void initialize_by_file(const QString& fileName);
-    void initialize_by_window(const QVector<char>& data);
+    void initializeDatem(const QVector<char>& data);
 
     bool validate() const;
 
     void solve();
+
+    bool checkComplete() const;
 signals:
     void potentialInitialized(int index, QSet<char> potentials);
 

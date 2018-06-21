@@ -25,6 +25,8 @@ public:
     void clearBoard();
 
     QVector<char> getDatemFromBoard();
+    QVector<char> getDatemFromFile();
+    void setDatemToBoard(const QVector<char>& datem);
 
 protected:
     void keyPressEvent(QKeyEvent *ev);

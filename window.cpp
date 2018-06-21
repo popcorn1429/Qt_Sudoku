@@ -5,6 +5,8 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QLabel>
+#include <QFile>
+#include <QTextStream>
 
 Window::Window(QWidget *parent) :
     QWidget(parent),
@@ -49,6 +51,41 @@ QVector<char> Window::getDatemFromBoard()
     return datem;
 }
 
+QVector<char> Window::getDatemFromFile()
+{
+    QString fileName = QFileDialog::getOpenFileName(this, QStringLiteral("sudoku file"),QStringLiteral("."),QStringLiteral("Text files (*.txt)"));
+    QFile srcFile(fileName);
+    if (!srcFile.open(QIODevice::ReadOnly|QIODevice::Text)) {
+        return QVector<char>();
+    }
+
+    QVector<char> datem;
+    QTextStream stream(&srcFile);
+    QString line;
+    int n = 0;
+    while (stream.readLineInto(&line)) {
+        if (line.size() < 9)
+            continue;
+        do {
+            if (line[n%9].toLatin1() != '0')
+                datem.push_back(line[n%9].toLatin1());
+            else
+                datem.push_back(' ');
+            ++n;
+        } while (n%9 != 0);
+    }
+    return datem;
+}
+
+void Window::setDatemToBoard(const QVector<char> &datem)
+{
+    int index = 0;
+    foreach (GridLabel* grid, grids) {
+        grid->setNumber(datem[index]);
+        ++index;
+    }
+}
+
 void Window::keyPressEvent(QKeyEvent *ev)
 {
     qDebug("ket pressed:%c",ev->key());
@@ -86,12 +123,14 @@ void Window::on_remove_digit_from_potentials(int index, char num)
 {
     GridLabel *grid = grids[index];
     grid->remove_digit_from_potentials(num);
+    ui->textBrowser->append(QString("<font size=\"2\" color=\"green\">remove potential [%1] from digit[%2]</font>").arg(num).arg(index));
 }
 
 void Window::on_update_grid_number(int index, char num)
 {
     GridLabel *grid = grids[index];
     grid->setNumber(num);
+    ui->textBrowser->append(QString("<font size=\"3\" color=\"blue\">verify [%1] in digit[%2]</font>").arg(num).arg(index));
 }
 
 void Window::on_focused_grid()
@@ -102,10 +141,24 @@ void Window::on_focused_grid()
         curGrid = grid;
 }
 
+/*file content like:
+203147009
+810900301
+...
+...
+*/
 void Window::on_importBtn_clicked()
 {
-    QString fileName = QFileDialog::getOpenFileName(this, QStringLiteral("sudoku file"),QStringLiteral("."),QStringLiteral("Text files (*.txt)"));
-    data->initialize_by_file(fileName);
+    QVector<char> datem = getDatemFromFile();
+    if (datem.size() < 81)
+        return;
+
+    clearBoard();
+    setDatemToBoard(datem);
+    setGridsDiseditable();
+    data->initializeDatem(datem);
+
+    ui->SolveBtn->setDisabled(false);
 }
 
 void Window::on_DiyBtn_clicked(bool checked)
@@ -119,7 +172,7 @@ void Window::on_DiyBtn_clicked(bool checked)
     else {
         QVector<char> datem = getDatemFromBoard();
         setGridsDiseditable();
-        data->initialize_by_window(datem);
+        data->initializeDatem(datem);
 
         ui->DiyBtn->setText("DIY");
     }
@@ -129,6 +182,11 @@ void Window::on_DiyBtn_clicked(bool checked)
 
 void Window::on_SolveBtn_clicked()
 {
+    if (data->checkComplete()) {
+        ui->textBrowser->append(QString("<font size=\"4\" color=\"red\">Sudoku Solved!</font>"));
+        return;
+    }
+
     data->solve();
 }
 

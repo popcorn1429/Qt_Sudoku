@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>776</width>
+    <width>850</width>
     <height>525</height>
    </rect>
   </property>
@@ -19,7 +19,7 @@
   <property name="windowTitle">
    <string>Sudoku</string>
   </property>
-  <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="2,1">
+  <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="8,5">
    <item>
     <widget class="QFrame" name="widget">
      <property name="sizePolicy">
@@ -1394,26 +1394,16 @@
       </widget>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout" stretch="4,2,4">
-       <item>
-        <spacer name="horizontalSpacer">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
+      <layout class="QHBoxLayout" name="horizontalLayout" stretch="2">
        <item>
         <layout class="QVBoxLayout" name="verticalLayout">
          <item>
           <widget class="QPushButton" name="importBtn">
            <property name="text">
             <string>import</string>
+           </property>
+           <property name="checkable">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
@@ -1442,19 +1432,6 @@
           </widget>
          </item>
         </layout>
-       </item>
-       <item>
-        <spacer name="horizontalSpacer_2">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
        </item>
       </layout>
      </item>

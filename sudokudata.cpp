@@ -1,38 +1,11 @@
 #include "sudokudata.h"
 
-#include <QFile>
-#include <QTextStream>
-
 SudokuData::SudokuData(QObject *parent) : QObject(parent)
 {
     auxiliary.resize(81);
 }
 
-/*file content like:
-2 3147  9
-81 9  3 1
-...
-..
-.
-*/
-void SudokuData::initialize_by_file(const QString &fileName)
-{
-    QFile srcFile(fileName);
-    if (!srcFile.open(QIODevice::ReadOnly|QIODevice::Text)) {
-        return;
-    }
-
-    QTextStream stream(&srcFile);
-    QString line;
-    int n = 0;
-    while (stream.readLineInto(&line)) {
-        if (line.size() < 9)
-            continue;
-
-    }
-}
-
-void SudokuData::initialize_by_window(const QVector<char> &data)
+void SudokuData::initializeDatem(const QVector<char> &data)
 {
     sudoku = data;
     initPotentials();
@@ -55,6 +28,15 @@ void SudokuData::solve()
     //rule 2
 
 
+}
+
+bool SudokuData::checkComplete() const
+{
+    for (int i = 0; i < sudoku.size(); ++i) {
+        if (sudoku[i] == ' ')
+            return false;
+    }
+    return true;
 }
 
 bool SudokuData::initPotentials()

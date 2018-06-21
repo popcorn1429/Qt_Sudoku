@@ -104,7 +104,7 @@ QSet<char> GridLabel::getPotentialNumbers() const
 
 void GridLabel::remove_digit_from_potentials(char num)
 {
-    qDebug("remove_digit_from_potentials %c",num);
+    //qDebug("remove_digit_from_potentials %c",num);
     QString content = text();
     int pos = content.indexOf('>');
     pos = content.indexOf(num, pos);
